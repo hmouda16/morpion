@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jeu de Morpion</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-gap: 10px;
+            margin: 20px;
+        }
+        .cell {
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            font-size: 24px;
+            cursor: pointer;
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<body>
+<h1>Jeu de Morpion</h1>
+
+<!-- Éléments pour afficher les noms des joueurs -->
+<p>Joueur X (premier joueur) : <span id="player1Name"></span></p>
+<p>Joueur O (deuxième joueur) : <span id="player2Name"></span></p>
+
+<div class="game-board">
+    <div class="cell" id="cell1">1</div>
+    <div class="cell" id="cell2">2</div>
+    <div class="cell" id="cell3">3</div>
+    <div class="cell" id="cell4">4</div>
+    <div class="cell" id="cell5">5</div>
+    <div class="cell" id="cell6">6</div>
+    <div class="cell" id="cell7">7</div>
+    <div class="cell" id="cell8">8</div>
+    <div class="cell" id="cell9">9</div>
+</div>
+
+<script>
+    const Player = {
+        FIRST: 'X',
+        SECOND: 'O'
+    };
+
+    const cells = document.querySelectorAll('.cell');
+    let currentPlayer = Player.FIRST;
+
+    // Demander les noms des joueurs
+    const player1 = prompt("Nom du joueur X (premier joueur) :");
+    const player2 = prompt("Nom du joueur O (deuxième joueur) :");
+
+    // Assurez-vous que les noms ne sont pas vides
+    if (player1 && player2) {
+        // Mettez à jour l'affichage avec les noms des joueurs
+        document.getElementById('player1Name').textContent = player1;
+        document.getElementById('player2Name').textContent = player2;
+
+         // Mettez à jour currentPlayer en fonction des noms des joueurs
+    currentPlayer = player1; // Le premier joueur (X) commence
+    } else {
+        // Si l'un des noms est vide, affichez un message d'erreur et rechargez la page
+        alert("Les noms des joueurs sont obligatoires.");
+        location.reload();
+    }
+
+    cells.forEach(cell => {
+        cell.addEventListener('click', () => {
+            if (cell.innerHTML === '' && !checkWin()) {
+                cell.innerHTML = currentPlayer;
+                currentPlayer = (currentPlayer === Player.FIRST) ? Player.SECOND : Player.FIRST;
+            }
+        });
+    });
+
+    function checkWin() {
+        // Vérification des lignes
+        for (let i = 0; i < 3; i++) {
+            if (
+                cells[i * 3].innerHTML !== '' &&
+                cells[i * 3].innerHTML === cells[i * 3 + 1].innerHTML &&
+                cells[i * 3].innerHTML === cells[i * 3 + 2].innerHTML
+            ) {
+                alert('Le joueur ' + cells[i * 3].innerHTML + ' a gagné !');
+                return true;
+            }
+        }
+
+        // Vérification des colonnes
+        for (let i = 0; i < 3; i++) {
+            if (
+                cells[i].innerHTML !== '' &&
+                cells[i].innerHTML === cells[i + 3].innerHTML &&
+                cells[i].innerHTML === cells[i + 6].innerHTML
+            ) {
+                alert('Le joueur ' + cells[i].innerHTML + ' a gagné !');
+                return true;
+            }
+        }
+
+        // Vérification des diagonales
+        if (
+            (cells[0].innerHTML !== '' &&
+                cells[0].innerHTML === cells[4].innerHTML &&
+                cells[0].innerHTML === cells[8].innerHTML) ||
+            (cells[2].innerHTML !== '' &&
+                cells[2].innerHTML === cells[4].innerHTML &&
+                cells[2].innerHTML === cells[6].innerHTML)
+        ) {
+            alert('Le joueur ' + cells[4].innerHTML + ' a gagné !');
+            return true;
+        }
+
+        return false;
+    }
+</script>
+</body>
+</html>
